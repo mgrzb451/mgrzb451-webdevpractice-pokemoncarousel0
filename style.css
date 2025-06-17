@@ -1,0 +1,209 @@
+
+html {
+  scroll-behavior: smooth;
+}
+
+:root {
+  --color-white: hsl(0, 0%, 95%);
+  --color-orange: #BF9004;
+  --color-yellow: #F2B705;
+  --color-blue-light: hsl(208, 45%, 65%);
+  --color-blue-dark: hsl(214, 50%, 44%);
+  --color-grey-dark: hsl(0, 0%, 10%);
+}
+*, *::after, *::before {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+@font-face {
+  font-family: pokefont;
+  src: url("./assets/pokefont-solid.ttf");
+
+  /* Pokemon style font */
+  /* font-family: pokefont, system-ui, sans-serif;
+  color: var(--color-yellow);
+  -webkit-text-stroke: 1px var(--color-blue-dark); */
+}
+
+body {
+  background: linear-gradient(to bottom right, var(--color-blue-light), var(--color-blue-dark));
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr min(100vw - 100px, 1100px) 1fr;
+  grid-template-rows: auto 1fr auto;
+  justify-items: center;
+  align-items: center;
+  gap: 2rem;
+
+  > * {
+    grid-column: 2;
+    grid-row: 2;
+  }
+}
+
+img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Header */
+.header {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  margin-block-start: 2rem;
+
+  img {
+    width: clamp(200px, 30%, 300px);
+    margin-inline: auto;
+    animation: slideFromTop 1s ease-out;
+  }
+}
+
+@keyframes slideFromTop {
+  0% {
+    opacity: 0;
+    transform: translateY(-20vh);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Footer */
+.footer {
+  margin-block-start: 40px;
+  padding-block: .5rem;
+  width: 100%;
+  grid-column: 1 / -1;
+  grid-row: 3;
+  font-size: .75rem;
+  text-align: center;
+}
+
+/* CAROUSEL */
+.carousel-container {
+  width: min(100%, 1100px);
+  height: fit-content;
+}
+
+.carousel {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc((100% / 3));
+  gap: 1rem;
+  list-style-type: none;
+  overflow-x: auto; /*can't be hidden or it won't work on mobile*/
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  anchor-name: --carouselAnchor;
+  scrollbar-width: auto;
+  justify-items: center;
+}
+
+/* scroll buttons */
+.carousel::scroll-button(*) {
+  position: absolute;
+  position-anchor: --carouselAnchor;
+}
+.carousel::scroll-button(left) {
+  right: calc(anchor(left) + 1rem);
+  align-self: anchor-center;
+  content: "<";
+}
+.carousel::scroll-button(right) {
+  left: calc(anchor(right) + 1rem);
+  align-self: anchor-center;
+  content: ">";
+}
+
+.card {
+  background-color: var(--color-white);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start; 
+  width: 310px;
+  height: 430px;
+  padding: 20px;
+  font-family: 'Segoe UI', sans-serif;
+  color: var(--color-grey-dark);
+  cursor: pointer;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  border-radius: 10px;
+  box-shadow: 0px 0px 5px hsla(from var(--color-blue-dark) h s l / 50%);
+  margin-block: 10px;
+  
+  &:nth-of-type(1) {
+    animation: slideFromBottom 1s ease-out; 
+  }
+  &:nth-of-type(2) {
+    /* since there's a delay we need to initially hide the image,
+    otherwise it's visible on page load and then after the delay disappear which looks jank */
+    opacity: 0;
+    animation: slideFromBottom 1s ease-out forwards 100ms;
+  }
+  &:nth-of-type(3) {
+    opacity: 0;
+    animation: slideFromBottom 1s ease-out forwards 200ms;
+  }
+
+  img {
+    width: 265px;
+  }
+  
+  h2 {
+    font-size: 2rem;
+    margin-block-start: 20px;
+  }
+
+  .type-container {
+    margin-block-start: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    img {
+      width: 40px;
+      height: auto;
+    }
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 500;
+    }
+  }
+}
+
+@keyframes slideFromBottom {
+  0% {
+    opacity: 1;
+    transform: translateY(100vh);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.carousel.dragged .card {
+  /* when the carousel is being dragged don't select images or text inside */
+  cursor: grab;
+  user-select: none;
+}
+
+@media screen and (max-width: 1150px) {
+  .carousel {
+    grid-auto-columns: calc((100% / 2));
+  }
+}
+@media screen and (max-width: 720px) {
+  .carousel {
+    grid-auto-columns: calc(100%);
+  }
+}
