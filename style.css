@@ -101,7 +101,7 @@ img {
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
   anchor-name: --carouselAnchor;
-  scrollbar-width: auto;
+  scrollbar-width: none;
   justify-items: center;
 }
 
